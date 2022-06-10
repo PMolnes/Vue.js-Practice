@@ -3,7 +3,7 @@
         <h2>{{ name }} {{ friendIsFavorite === '1' ? '(Favorite)' : ''}}</h2>
         <button  @click='toggleFavorite'>Toggle favorite</button>
         <button @click="toggleDetails">{{ detailsAreVisible ? "Hide" : "Show" }} Details</button>
-        <ul v-if="detailsAreVisible">
+            <ul v-if="detailsAreVisible">
             <li><strong>Phone: </strong> {{ phoneNumber }}</li>
             <li><strong>Email: </strong> {{ emailAddress }}</li>
         </ul>

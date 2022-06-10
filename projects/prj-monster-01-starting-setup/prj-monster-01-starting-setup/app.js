@@ -64,7 +64,7 @@ const app = Vue.createApp({
             this.playerHealth = 100;
             this.monsterHealth = 100;
             this.winner = null;
-            this.currentRound = 0;
+            this.specialAttackCooldown = 0;
             this.log = [];
         },
         surrender() {
