@@ -1,111 +1,77 @@
-<template>]
-  <div class="container">
-    <list-data></list-data>
-  </div>
-  <div class="container">
-    <div class="block" :class="{ animate: animatedBlock }"></div>
-    <button @click="animateBlock">Animate</button>
-  </div>
-  <div class="container">
-    <transition
-      name="para"
-      @before-enter="beforeEnter"
-      @enter="enter"
-      @before-leave="beforeLeave"
-      @leave="leave"
-      @enter-cancelled="enterCancelled"
-      @leave-cancelled="leaveCancelled"
-    >
-      <p v-if="paraIsVisisble">Paragraph</p>
-    </transition>
-    <button @click="toggleParagraph">Toggle Paragraph</button>
-  </div>
-  <div class="container">
+<template>
+  <router-view v-slot="slotProps">
     <transition name="fade-button" mode="out-in">
-      <button @click="showUsers" v-if="!usersAreVisible">Show Users</button>
-      <button @click="hideUsers" v-else>Hide Users</button>
+      <component :is="slotProps.Component"></component>
     </transition>
-  </div>
-  <base-modal @close="hideDialog" :open="dialogIsVisible">
-    <p>This is a test dialog!</p>
-    <button @click="hideDialog">Close it!</button>
-  </base-modal>
-  <div class="container">
-    <button @click="showDialog">Show Dialog</button>
-  </div>
+  </router-view>
 </template>
 
 <script>
-import ListData from './components/ListData.vue';
 export default {
-    component: {
-        ListData,
+  data() {
+    return {
+      dialogIsVisible: false,
+      animatedBlock: false,
+      paraIsVisisble: false,
+      usersAreVisible: false,
+      enterInterval: 0,
+      leaveInterval: 0,
+    };
+  },
+  methods: {
+    showDialog() {
+      this.dialogIsVisible = true;
     },
-    data() {
-        return {
-            dialogIsVisible: false,
-            animatedBlock: false,
-            paraIsVisisble: false,
-            usersAreVisible: false,
-            enterInterval: 0,
-            leaveInterval: 0,
-        };
+    hideDialog() {
+      this.dialogIsVisible = false;
     },
-    methods: {
-        showDialog() {
-            this.dialogIsVisible = true;
-        },
-        hideDialog() {
-            this.dialogIsVisible = false;
-        },
-        animateBlock() {
-            this.animatedBlock = true;
-        },
-        toggleParagraph() {
-            this.paraIsVisisble = !this.paraIsVisisble;
-        },
-        showUsers() {
-            this.usersAreVisible = true;
-        },
-        hideUsers() {
-            this.usersAreVisible = false;
-        },
-        beforeEnter(el) {
-            el.style.opacity = 0;
-        },
-        enter(el, done) {
-            let round = 1;
-            this.enterInterval = setInterval(() => {
-                el.style.opacity = round * 0.01;
-                round++;
-                if (round > 100) {
-                    clearInterval(this.enterInterval);
-                    done();
-                }
-            }, 20);
-        },
-        beforeLeave(el) {
-            el.style.opacity = 1;
-        },
-        leave(el, done) {
-            let round = 1;
-            this.leaveInterval = setInterval(() => {
-                el.style.opacity = 1 - round * 0.01;
-                round++;
-                if (round > 100) {
-                    clearInterval(this.leaveInterval);
-                    done();
-                }
-            }, 20);
-        },
-        enterCancelled() {
-            clearInterval(this.enterInterval);
-        },
-        leaveCancelled() {
-            clearInterval(this.leaveInterval);
-        },
+    animateBlock() {
+      this.animatedBlock = true;
     },
-    components: { ListData }
+    toggleParagraph() {
+      this.paraIsVisisble = !this.paraIsVisisble;
+    },
+    showUsers() {
+      this.usersAreVisible = true;
+    },
+    hideUsers() {
+      this.usersAreVisible = false;
+    },
+    beforeEnter(el) {
+      el.style.opacity = 0;
+    },
+    enter(el, done) {
+      let round = 1;
+      this.enterInterval = setInterval(() => {
+        el.style.opacity = round * 0.01;
+        round++;
+        if (round > 100) {
+          clearInterval(this.enterInterval);
+          done();
+        }
+      }, 20);
+    },
+    beforeLeave(el) {
+      el.style.opacity = 1;
+    },
+    leave(el, done) {
+      let round = 1;
+      this.leaveInterval = setInterval(() => {
+        el.style.opacity = 1 - round * 0.01;
+        round++;
+        if (round > 100) {
+          clearInterval(this.leaveInterval);
+          done();
+        }
+      }, 20);
+    },
+    enterCancelled() {
+      clearInterval(this.enterInterval);
+    },
+    leaveCancelled() {
+      clearInterval(this.leaveInterval);
+    },
+  },
 };
 </script>
 
@@ -139,6 +105,7 @@ button:active {
   background-color: #290033;
   margin-bottom: 2rem;
 }
+
 .container {
   max-width: 40rem;
   margin: 2rem auto;
@@ -171,6 +138,14 @@ button:active {
 .fade-button-enter-to,
 .fade-button-leave-from {
   opacity: 1;
+}
+
+.route-enter-active {
+  animation: slide-scale .4s ease-out;
+}
+
+.route-leave-active {
+  animation: slide-scale .4s ease-in;
 }
 
 @keyframes slide-scale {

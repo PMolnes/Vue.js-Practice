@@ -17,6 +17,9 @@ const router = createRouter({
 const app = createApp(App);
 app.use(router);
 
+router.isReady().then(() => {
+  app.mount('#app');
+})
+
 app.component('base-modal', BaseModal);
 
-app.mount('#app');
